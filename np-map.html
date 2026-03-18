@@ -23,76 +23,189 @@
     }
 
     :root {
-      --np-blue:  #0070BA;
-      --np-green: #4CAF50;
+      --np-blue:        #0070BA;
+      --np-green:       #4CAF50;
       --np-blue-light:  rgba(0, 112, 186, 0.15);
       --np-green-light: rgba(76, 175, 80, 0.15);
-      --np-blue-dark:  #005a96;
-      --np-green-dark: #388E3C;
+      --np-blue-dark:   #005a96;
+      --np-green-dark:  #388E3C;
     }
 
-    body {
+    html, body {
+      height: 100%;
       font-family: 'Barlow', sans-serif;
       background: #f0f4f8;
     }
 
-    .map-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      min-height: 500px;
+    /* ── View toggle (fixed top-right) ── */
+    .view-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 2000;
+      display: flex;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
     }
 
+    .view-toggle button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      background: transparent;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #6b7a99;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .view-toggle button.active {
+      background: var(--np-blue);
+      color: #ffffff;
+    }
+
+    .view-toggle button svg {
+      flex-shrink: 0;
+    }
+
+    /* ── Views ── */
+    .view-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .view-container.hidden {
+      display: none;
+    }
+
+    /* ── Map ── */
     #map {
       width: 100%;
       height: 100%;
     }
 
-    /* ── Legend ── */
-    .legend {
-      position: absolute;
-      bottom: 28px;
-      left: 16px;
-      z-index: 1000;
+    /* ── List view ── */
+    .list-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    .list-count {
+      font-size: 12px;
+      color: #6b7a99;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .locations-table {
+      width: 100%;
+      border-collapse: collapse;
       background: #ffffff;
       border-radius: 10px;
-      padding: 14px 18px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-      font-size: 13px;
-      line-height: 1.5;
+      overflow: hidden;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.08);
+    }
+
+    .locations-table thead {
+      background: #f8fafc;
+    }
+
+    .locations-table th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #6b7a99;
+      border-bottom: 1px solid #e2e8f0;
+      cursor: pointer;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .locations-table th:hover {
       color: #1a2233;
     }
 
-    .legend-title {
-      font-weight: 700;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .sort-indicator {
+      display: inline-block;
+      margin-left: 4px;
+      opacity: 0.5;
+      font-size: 10px;
+    }
+
+    .sort-indicator.active {
+      opacity: 1;
+      color: var(--np-blue);
+    }
+
+    .locations-table tbody tr {
+      border-bottom: 1px solid #f0f4f8;
+      transition: background 0.1s;
+    }
+
+    .locations-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .locations-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .locations-table td {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #1a2233;
+      vertical-align: middle;
+    }
+
+    .table-name {
+      font-weight: 600;
+    }
+
+    .table-address {
       color: #6b7a99;
-      margin-bottom: 10px;
+      font-size: 12px;
     }
 
-    .legend-item {
-      display: flex;
+    .table-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 7px;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
     }
 
-    .legend-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .legend-dot {
-      width: 14px;
-      height: 14px;
+    .table-badge-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       flex-shrink: 0;
-      border: 2px solid rgba(255,255,255,0.6);
     }
 
-    .legend-dot.direct   { background: var(--np-green); box-shadow: 0 0 0 2px var(--np-green-light); }
-    .legend-dot.indirect { background: var(--np-blue);  box-shadow: 0 0 0 2px var(--np-blue-light); }
+    .table-badge.dwdm    { background: var(--np-blue-light);  color: var(--np-blue-dark); }
+    .table-badge.ethernet { background: var(--np-green-light); color: var(--np-green-dark); }
+    .table-badge.dwdm .table-badge-dot    { background: var(--np-blue); }
+    .table-badge.ethernet .table-badge-dot { background: var(--np-green); }
+
+    .table-flag {
+      font-size: 16px;
+      margin-right: 4px;
+    }
 
     /* ── Leaflet popup overrides ── */
     .leaflet-popup-content-wrapper {
@@ -130,8 +243,8 @@
       margin-top: 4px;
     }
 
-    .popup-type-dot.direct   { background: var(--np-green); }
-    .popup-type-dot.indirect { background: var(--np-blue); }
+    .popup-type-dot.dwdm    { background: var(--np-blue); }
+    .popup-type-dot.ethernet { background: var(--np-green); }
 
     .popup-name {
       font-size: 14px;
@@ -150,7 +263,9 @@
     }
 
     .popup-badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.06em;
@@ -158,101 +273,149 @@
       padding: 3px 8px;
       border-radius: 20px;
       margin-left: 20px;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       font-family: 'Barlow', sans-serif;
     }
 
-    .popup-badge.direct   { background: var(--np-green-light); color: var(--np-green-dark); }
-    .popup-badge.indirect { background: var(--np-blue-light);  color: var(--np-blue-dark); }
-
-    .popup-services {
-      margin-left: 20px;
-      margin-top: 4px;
-    }
-
-    .popup-services-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: #a0aec0;
-      margin-bottom: 5px;
-    }
-
-    .popup-service-tag {
-      display: inline-block;
-      font-size: 11px;
-      background: #f0f4f8;
-      color: #4a5568;
-      border-radius: 4px;
-      padding: 2px 7px;
-      margin: 2px 2px 0 0;
-    }
-
-
+    .popup-badge.dwdm    { background: var(--np-blue-light);  color: var(--np-blue-dark); }
+    .popup-badge.ethernet { background: var(--np-green-light); color: var(--np-green-dark); }
   </style>
 </head>
 <body>
 
-<div class="map-wrapper">
+<!-- View toggle -->
+<div class="view-toggle">
+  <button id="btn-map" class="active" onclick="switchView('map')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    Kaart
+  </button>
+  <button id="btn-list" onclick="switchView('list')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    Lijst
+  </button>
+</div>
+
+<!-- Map View -->
+<div id="view-map" class="view-container">
   <div id="map"></div>
+</div>
 
-  <!-- Legend -->
-  <div class="legend">
-    <div class="legend-title">Locaties</div>
-    <div class="legend-item">
-      <div class="legend-dot direct"></div>
-      <span>Eigen aanwezigheid (direct)</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-dot indirect"></div>
-      <span>Via leverancier (indirect)</span>
-    </div>
+<!-- List View -->
+<div id="view-list" class="view-container hidden">
+  <div class="list-container">
+    <div class="list-count" id="list-count"></div>
+    <table class="locations-table">
+      <thead>
+        <tr>
+          <th onclick="sortTable('name')">Naam <span class="sort-indicator active" id="sort-name">▲</span></th>
+          <th onclick="sortTable('city')">Stad <span class="sort-indicator" id="sort-city">▲</span></th>
+          <th onclick="sortTable('country')">Land <span class="sort-indicator" id="sort-country">▲</span></th>
+          <th onclick="sortTable('address')">Adres <span class="sort-indicator" id="sort-address">▲</span></th>
+          <th onclick="sortTable('type')">Product Type <span class="sort-indicator" id="sort-type">▲</span></th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
   </div>
-
-
 </div>
 
 <script>
+const COUNTRY_FLAGS = { NL:'🇳🇱', DE:'🇩🇪', BE:'🇧🇪', GB:'🇬🇧', IE:'🇮🇪', FR:'🇫🇷', DK:'🇩🇰', LU:'🇱🇺' };
+
 const datacenters = [
-  { name: "Alticom - IJsselstein",                    country: "NL", city: "IJsselstein",        lat: 52.002407, lng: 5.050569, type: "indirect", address: "Hoge Biezendijk 21, IJsselstein",               services: [] },
-  { name: "Bytesnet Rotterdam",                        country: "NL", city: "Rotterdam",           lat: 51.930144, lng: 4.414046, type: "indirect", address: "Schuttevaerweg 48, Rotterdam",                  services: [] },
-  { name: "Cellnex Datacenter Alphen aan den Rijn",   country: "NL", city: "Alphen aan den Rijn", lat: 52.136933, lng: 4.646501, type: "direct", address: "Energieweg 4, Alphen aan den Rijn",             services: [] },
-  { name: "Cellnex Datacenter Amsterdam",             country: "NL", city: "Amsterdam",           lat: 52.336273, lng: 4.886635, type: "indirect", address: "Barbara Strozzilaan 251, Amsterdam",            services: [] },
-  { name: "Cellnex Datacenter Hilversum",             country: "NL", city: "Hilversum",           lat: 52.242621, lng: 5.164383, type: "indirect", address: "Witte Kruislaan 47-A, Hilversum",               services: [] },
-  { name: "Cellnex Datacenter Rotterdam",             country: "NL", city: "Rotterdam",           lat: 51.875343, lng: 4.449031, type: "direct", address: "Anthony Fokkerweg 40, Rotterdam",               services: [] },
-  { name: "ColoCenter Zoetermeer",                    country: "NL", city: "Zoetermeer",          lat: 52.033382, lng: 4.496007, type: "indirect", address: "Heliumstraat 200, Zoetermeer",                  services: [] },
-  { name: "Digital Realty Amsterdam AMS17",           country: "NL", city: "Amsterdam",           lat: 52.356353, lng: 4.951609, type: "indirect", address: "Science Park 120, Amsterdam",                   services: [] },
-  { name: "Equinix AM3 - Amsterdam, Science Park",    country: "NL", city: "Amsterdam",           lat: 52.354686, lng: 4.958827, type: "indirect", address: "Science Park 610, Amsterdam",                   services: [] },
-  { name: "Equinix AM4 - Amsterdam, Science Park",    country: "NL", city: "Amsterdam",           lat: 52.354686, lng: 4.958827, type: "indirect", address: "Science Park 610, Amsterdam",                   services: [] },
-  { name: "Equinix AM7 - Amsterdam, Kuiperberweg",    country: "NL", city: "Amsterdam",           lat: 52.303078, lng: 4.938009, type: "indirect", address: "Kuiperbergweg 13, Amsterdam",                   services: [] },
-  { name: "Eurofiber Datacenter Nedzone",             country: "NL", city: "Steenbergen",         lat: 51.587535, lng: 4.305055, type: "indirect", address: "Drukkerij 6, Steenbergen",                      services: [] },
-  { name: "Eurofiber Datacenter Rotterdam",           country: "NL", city: "Alblasserdam",        lat: 51.845913, lng: 4.679147, type: "indirect", address: "van Coulsterweg 6, Alblasserdam",               services: [] },
-  { name: "Eurofiber Datacenter Utrecht",             country: "NL", city: "Groenekan",           lat: 52.122761, lng: 5.143087, type: "indirect", address: "Koningin Wilhelminaweg 471, Groenekan",         services: [] },
-  { name: "Global Switch Amsterdam",                  country: "NL", city: "Amsterdam",           lat: 52.343984, lng: 4.828711, type: "indirect", address: "Johan Huizingalaan 759, Amsterdam",             services: [] },
-  { name: "KoloDC NL1",                               country: "NL", city: "Dronten",             lat: 52.543666, lng: 5.705215, type: "indirect", address: "De Linge 26, Dronten",                          services: [] },
-  { name: "KPN DC2",                                  country: "NL", city: "Amsterdam",           lat: 52.336612, lng: 4.886848, type: "indirect", address: "Barbara Strozzilaan 251, Amsterdam",            services: [] },
-  { name: "Mediagateway",                             country: "NL", city: "Hilversum",           lat: 52.241526, lng: 5.169722, type: "indirect", address: "Koos Postemalaan 2, Hilversum",                 services: [] },
-  { name: "NIKHEF Amsterdam",                         country: "NL", city: "Amsterdam",           lat: 52.356394, lng: 4.950837, type: "indirect", address: "Science Park 105, Amsterdam",                   services: [] },
-  { name: "nLighten Amsterdam AMS1",                  country: "NL", city: "Amsterdam",           lat: 52.400495, lng: 4.842911, type: "indirect", address: "Gyroscoopweg 134-140, Amsterdam",               services: [] },
-  { name: "NorthC Aalsmeer",                          country: "NL", city: "Aalsmeer",            lat: 52.259795, lng: 4.774186, type: "indirect", address: "Lakenblekerstraat 13, Aalsmeer",                services: [] },
-  { name: "NorthC Almere",                            country: "NL", city: "Almere",              lat: 52.364353, lng: 5.268793, type: "indirect", address: "Rondebeltweg 62, Almere",                       services: [] },
-  { name: "NorthC Amsterdam 1",                       country: "NL", city: "Amsterdam",           lat: 52.392977, lng: 4.849211, type: "indirect", address: "Kabelweg 48 A, Amsterdam",                      services: [] },
-  { name: "NorthC Delft",                             country: "NL", city: "Delft",               lat: 51.987103, lng: 4.377522, type: "indirect", address: "Heertjeslaan 1, Delft",                         services: [] },
-  { name: "NorthC Nieuwegein",                        country: "NL", city: "Nieuwegein",          lat: 52.018332, lng: 5.104366, type: "indirect", address: "Frieslandhaven 6, Nieuwegein",                  services: [] },
-  { name: "NorthC Oude Meer",                         country: "NL", city: "Oude Meer",           lat: 52.292570, lng: 4.788162, type: "indirect", address: "Fokkerweg 300, Oude Meer",                      services: [] },
-  { name: "NorthC Rotterdam Waalhaven",               country: "NL", city: "Rotterdam",           lat: 51.875343, lng: 4.449031, type: "indirect", address: "Anthony Fokkerweg 40, Rotterdam",               services: [] },
-  { name: "NorthC Rotterdam Zestienhoven 1",          country: "NL", city: "Rotterdam",           lat: 51.953104, lng: 4.448025, type: "indirect", address: "Tempelhof 5-11, Rotterdam",                     services: [] },
-  { name: "Smartdc Rotterdam",                        country: "NL", city: "Rotterdam",           lat: 51.923689, lng: 4.432138, type: "indirect", address: "Van Nelleweg 1, Rotterdam",                     services: [] },
-  { name: "Spaanse Kubus Rotterdam",                  country: "NL", city: "Rotterdam",           lat: 51.930359, lng: 4.414322, type: "indirect", address: "Vlaardingweg 62 - 415, Rotterdam",              services: [] },
-  { name: "Switch Datacenters AMS2",                  country: "NL", city: "Woerden",             lat: 52.081800, lng: 4.892822, type: "indirect", address: "Polanerbaan 1, Woerden",                        services: [] },
-  { name: "XS4ALL DC2",                               country: "NL", city: "Amsterdam",           lat: 52.336612, lng: 4.886848, type: "indirect", address: "Barbara Strozzilaan 251, Amsterdam",            services: [] },
-  { name: "Eurofiber Datacenter Brabant",            country: "NL", city: "Waalwijk",           lat: 51.695715, lng: 5.037861, type: "indirect", address: "Gragtmansstraat 1B, Waalwijk",            services: [] },
+  // ── DWDM, Ethernet (Unique = TRUE) ──────────────────────────────────
+  { name: "Alticom - IJsselstein",                  address: "Hoge Biezendijk 21",          city: "IJsselstein",        country: "NL", lat: 52.002407, lng: 5.050569,  type: "dwdm" },
+  { name: "Cellnex Datacenter Alphen aan den Rijn", address: "Energieweg 4",                city: "Alphen aan den Rijn", country: "NL", lat: 52.136933, lng: 4.646501,  type: "dwdm" },
+  { name: "NorthC Almere",                          address: "Rondebeltweg 62",              city: "Almere",             country: "NL", lat: 52.364353, lng: 5.268793,  type: "dwdm" },
+  { name: "NorthC Nieuwegein",                      address: "Frieslandhaven 6",             city: "Nieuwegein",         country: "NL", lat: 52.018332, lng: 5.104366,  type: "dwdm" },
+  { name: "NorthC Delft",                           address: "Heertjeslaan 1",               city: "Delft",              country: "NL", lat: 51.987103, lng: 4.377522,  type: "dwdm" },
+  { name: "NorthC Oude Meer",                       address: "Fokkerweg 300",                city: "Oude Meer",          country: "NL", lat: 52.292570, lng: 4.788162,  type: "dwdm" },
+  { name: "Equinix AM7 - Amsterdam",                address: "Kuiperbergweg 13",             city: "Amsterdam",          country: "NL", lat: 52.303078, lng: 4.938009,  type: "dwdm" },
+  { name: "NIKHEF Amsterdam",                       address: "Science Park 105",             city: "Amsterdam",          country: "NL", lat: 52.356394, lng: 4.950837,  type: "dwdm" },
+  { name: "Global Switch Amsterdam",                address: "Johan Huizingalaan 759",       city: "Amsterdam",          country: "NL", lat: 52.343984, lng: 4.828711,  type: "dwdm" },
+  { name: "Eurofiber Datacenter Utrecht",           address: "Koningin Wilhelminaweg 471",   city: "Groenekan",          country: "NL", lat: 52.122761, lng: 5.143087,  type: "dwdm" },
+  { name: "Equinix AM3 - Amsterdam",                address: "Science Park 610",             city: "Amsterdam",          country: "NL", lat: 52.354686, lng: 4.958827,  type: "dwdm" },
+  { name: "Cellnex Datacenter Amsterdam",           address: "Barbara Strozzilaan 251",      city: "Amsterdam",          country: "NL", lat: 52.336273, lng: 4.886635,  type: "dwdm" },
+  { name: "Switch Datacenters AMS2",                address: "Polanerbaan 1",                city: "Woerden",            country: "NL", lat: 52.081800, lng: 4.892822,  type: "dwdm" },
+  { name: "Eurofiber Datacenter Brabant",           address: "Gragtmansstraat 1B",           city: "Waalwijk",           country: "NL", lat: 51.695715, lng: 5.037861,  type: "dwdm" },
+  { name: "NorthC Amsterdam 1",                     address: "Kabelweg 48 A",                city: "Amsterdam",          country: "NL", lat: 52.392977, lng: 4.849211,  type: "dwdm" },
+  { name: "nLighten Amsterdam AMS1",                address: "Gyroscoopweg 134-140",         city: "Amsterdam",          country: "NL", lat: 52.400495, lng: 4.842911,  type: "dwdm" },
+  { name: "Eurofiber Datacenter Nedzone",           address: "Drukkerij 6",                  city: "Steenbergen",        country: "NL", lat: 51.587535, lng: 4.305055,  type: "dwdm" },
+  { name: "ColoCenter Zoetermeer",                  address: "Heliumstraat 200",             city: "Zoetermeer",         country: "NL", lat: 52.033382, lng: 4.496007,  type: "dwdm" },
+  { name: "Mediagateway",                           address: "Koos Postemalaan 2",           city: "Hilversum",          country: "NL", lat: 52.241526, lng: 5.169722,  type: "dwdm" },
+  { name: "Digital Realty Amsterdam AMS17",         address: "Science Park 120",             city: "Amsterdam",          country: "NL", lat: 52.356353, lng: 4.951609,  type: "dwdm" },
+  { name: "Cellnex Datacenter Hilversum",           address: "Witte Kruislaan 47-A",         city: "Hilversum",          country: "NL", lat: 52.242621, lng: 5.164383,  type: "dwdm" },
+  { name: "NorthC Rotterdam Zestienhoven 1",        address: "Tempelhof 5-11",               city: "Rotterdam",          country: "NL", lat: 51.953104, lng: 4.448025,  type: "dwdm" },
+  { name: "Eurofiber Datacenter Rotterdam",         address: "van Coulsterweg 6",            city: "Alblasserdam",       country: "NL", lat: 51.845913, lng: 4.679147,  type: "dwdm" },
+  { name: "Cellnex Datacenter Rotterdam",           address: "Anthony Fokkerweg 40",         city: "Rotterdam",          country: "NL", lat: 51.875343, lng: 4.449031,  type: "dwdm" },
+  { name: "KoloDC NL1",                             address: "De Linge 26",                  city: "Dronten",            country: "NL", lat: 52.543666, lng: 5.705215,  type: "dwdm" },
+  { name: "Smartdc Rotterdam",                      address: "Van Nelleweg 1",               city: "Rotterdam",          country: "NL", lat: 51.923689, lng: 4.432138,  type: "dwdm" },
+  { name: "Spaanse Kubus Rotterdam",                address: "Vlaardingweg 62 - 415",        city: "Rotterdam",          country: "NL", lat: 51.930359, lng: 4.414322,  type: "dwdm" },
+  { name: "Bytesnet Rotterdam",                     address: "Schuttevaerweg 48",            city: "Rotterdam",          country: "NL", lat: 51.930144, lng: 4.414046,  type: "dwdm" },
+  { name: "NorthC Aalsmeer",                        address: "Lakenblekerstraat 13",         city: "Aalsmeer",           country: "NL", lat: 52.259795, lng: 4.774186,  type: "dwdm" },
+
+  // ── Ethernet (Unique = TRUE) ─────────────────────────────────────────
+  { name: "BIT-1",                                  address: "Kelvinstraat 63",              city: "Ede",                country: "NL", lat: 52.030762, lng: 5.624974,  type: "ethernet" },
+  { name: "Greenhouse Datacenters DC1",             address: "Industriestraat 24",           city: "Naaldwijk",          country: "NL", lat: 52.001194, lng: 4.210829,  type: "ethernet" },
+  { name: "InterDC Doetinchem",                     address: "1 Gildenbroederslaan",         city: "Doetinchem",         country: "NL", lat: 51.954184, lng: 6.300252,  type: "ethernet" },
+  { name: "InterDC Enschede",                       address: "30 Josinkstraat",              city: "Enschede",           country: "NL", lat: 52.220300, lng: 6.864338,  type: "ethernet" },
+  { name: "InterDC Enschede Marssteden",            address: "110 Marssteden",               city: "Enschede",           country: "NL", lat: 52.216301, lng: 6.820988,  type: "ethernet" },
+  { name: "InterDC Hengelo",                        address: "Sherwood Rangers 1",           city: "Hengelo",            country: "NL", lat: 52.267645, lng: 6.791128,  type: "ethernet" },
+  { name: "DFDC The Hague",                         address: "Moezel 5",                     city: "Den Haag",           country: "NL", lat: 52.064706, lng: 4.387171,  type: "ethernet" },
+  { name: "Penta Infra Leeuwarden LEE01",           address: "François Haverschmidtwei 3",   city: "Leeuwarden",         country: "NL", lat: 53.204849, lng: 5.765145,  type: "ethernet" },
+  { name: "Qupra DC",                               address: "Nieuwe Hemweg 26",             city: "Amsterdam",          country: "NL", lat: 52.395257, lng: 4.863530,  type: "ethernet" },
+  { name: "Arelion Dusseldorf DDF/B",               address: "In der Steele 43",             city: "Düsseldorf",         country: "DE", lat: 51.188000, lng: 6.866080,  type: "ethernet" },
+  { name: "Bytesnet Groningen",                     address: "De Bunders 1",                 city: "Groningen",          country: "NL", lat: 53.244613, lng: 6.527313,  type: "ethernet" },
+  { name: "Digital Realty Brussels BRU1",           address: "Wezenbeekstraat 2",            city: "Brussels",           country: "BE", lat: 50.870502, lng: 4.476941,  type: "ethernet" },
+  { name: "Digital Realty Copenhagen CPH1-3",       address: "Industriparken 20A",           city: "Copenhagen",         country: "DK", lat: 55.728092, lng: 12.377482, type: "ethernet" },
+  { name: "Digital Realty Dublin DUB1-2",           address: "Unit 35 Lavery Avenue",        city: "Dublin",             country: "IE", lat: 53.334251, lng: -6.365538, type: "ethernet" },
+  { name: "Digital Realty Dusseldorf DUS1-2",       address: "In der Steele 29",             city: "Düsseldorf",         country: "DE", lat: 51.188270, lng: 6.867220,  type: "ethernet" },
+  { name: "Digital Realty Frankfurt FRA1-16",       address: "Hanauer Landstrasse 298",      city: "Frankfurt",          country: "DE", lat: 50.119670, lng: 8.734630,  type: "ethernet" },
+  { name: "Digital Realty London LHR20",            address: "Sovereign House",              city: "London",             country: "GB", lat: 51.499819, lng: -0.010775, type: "ethernet" },
+  { name: "Digital Realty Marseille MRS1-3",        address: "40 Avenue Roger Salengro",     city: "Marseille",          country: "FR", lat: 43.310818, lng: 5.373865,  type: "ethernet" },
+  { name: "EdgeConneX Amsterdam (EDCAMS01)",        address: "Koolhovenlaan 12",             city: "Amsterdam",          country: "NL", lat: 52.286093, lng: 4.768444,  type: "ethernet" },
+  { name: "EFX",                                    address: "Prof Dr Dorgelolaan 40",        city: "Eindhoven",          country: "NL", lat: 51.445601, lng: 5.494271,  type: "ethernet" },
+  { name: "ENGIE Cofely (Maastricht-Airport)",      address: "Amerikalaan 35",               city: "Maastricht",         country: "NL", lat: 50.928065, lng: 5.781152,  type: "ethernet" },
+  { name: "Equinix DB3 - Dublin",                   address: "Unit 2, North West Business Park", city: "Dublin",         country: "IE", lat: 53.411166, lng: -6.347409, type: "ethernet" },
+  { name: "Equinix FR4 - Frankfurt",                address: "Lärchenstrasse 110",           city: "Frankfurt",          country: "DE", lat: 50.097939, lng: 8.587964,  type: "ethernet" },
+  { name: "Equinix FR7 - Frankfurt",                address: "Gutleutstrasse 310",           city: "Frankfurt",          country: "DE", lat: 50.096869, lng: 8.644169,  type: "ethernet" },
+  { name: "Equinix LD5 - London",                   address: "8 Buckingham Avenue",          city: "Slough",             country: "GB", lat: 51.522463, lng: -0.629050, type: "ethernet" },
+  { name: "Equinix LD8 - London",                   address: "6-9 Harbour Exchange Square",  city: "London",             country: "GB", lat: 51.498842, lng: -0.014327, type: "ethernet" },
+  { name: "Equinix ZW1 - Zwolle",                   address: "Telfordstraat 3",              city: "Zwolle",             country: "NL", lat: 52.488492, lng: 6.142697,  type: "ethernet" },
+  { name: "euNetworks Colocation Berlin",           address: "Alboinstrasse 36-42",          city: "Berlin",             country: "DE", lat: 52.465660, lng: 13.369370, type: "ethernet" },
+  { name: "Eurofiber Datacenter Amsterdam",         address: "Parellaan 9",                  city: "Hoofddorp",          country: "NL", lat: 52.290393, lng: 4.686739,  type: "ethernet" },
+  { name: "Eurofiber Datacenter Arnhem",            address: "Tivolilaan 251",               city: "Arnhem",             country: "NL", lat: 51.988021, lng: 5.932863,  type: "ethernet" },
+  { name: "Global-e Datacenter NLRI1",              address: "Haansbergseweg 12",            city: "Rijen",              country: "NL", lat: 51.579078, lng: 4.929288,  type: "ethernet" },
+  { name: "GlobalConnect Taastrup 1 (CPH1)",        address: "Hørskætten 3-5 and 12",        city: "Taastrup",           country: "DK", lat: 55.662000, lng: 12.301459, type: "ethernet" },
+  { name: "GlobalConnect Taastrup 2",               address: "Hørskætten 6C",                city: "Taastrup",           country: "DK", lat: 55.662392, lng: 12.307179, type: "ethernet" },
+  { name: "ITENOS Frankfurt (FRA1)",                address: "Kleyerstrasse 90 / Rebstoeckerstrasse 25-31", city: "Frankfurt", country: "DE", lat: 50.099697, lng: 8.631763, type: "ethernet" },
+  { name: "LuxConnect DC1.1 - Bettembourg",         address: "202, Z.a.e. Wolser F",         city: "Bettembourg",        country: "LU", lat: 49.504919, lng: 6.113522,  type: "ethernet" },
+  { name: "NewTelco Frankfurt",                     address: "Rebstöckerstrasse 25-31",       city: "Frankfurt",          country: "DE", lat: 50.099697, lng: 8.631763,  type: "ethernet" },
+  { name: "NorthC Duesseldorf",                     address: "In Der Steele 37A",             city: "Düsseldorf",         country: "DE", lat: 51.188190, lng: 6.867280,  type: "ethernet" },
+  { name: "NorthC Eindhoven 1",                     address: "High Tech Campus 53",           city: "Eindhoven",          country: "NL", lat: 51.407417, lng: 5.458918,  type: "ethernet" },
+  { name: "NorthC Groningen 1",                     address: "Liverpoolweg 10",               city: "Groningen",          country: "NL", lat: 53.207462, lng: 6.473715,  type: "ethernet" },
+  { name: "NTT Berlin 1 Data Center (BER1)",        address: "Nonnendammallee 15",            city: "Berlin",             country: "DE", lat: 52.538479, lng: 13.237136, type: "ethernet" },
+  { name: "QTS Groningen (GRO1)",                   address: "Zernikelaan 16",                city: "Groningen",          country: "NL", lat: 53.246048, lng: 6.528520,  type: "ethernet" },
+  { name: "Rekenhal",                               address: "Nettelbosje 1",                 city: "Groningen",          country: "NL", lat: 53.238044, lng: 6.536082,  type: "ethernet" },
+  { name: "Speedbone Berlin",                       address: "Alboinstr. 36 - 42",            city: "Berlin",             country: "DE", lat: 52.465779, lng: 13.369905, type: "ethernet" },
+  { name: "Telehouse - Frankfurt",                  address: "Kleyerstrasse 75-87",           city: "Frankfurt",          country: "DE", lat: 50.096962, lng: 8.630057,  type: "ethernet" },
+  { name: "Telehouse - London (Docklands South)",   address: "1 Blackwall Way",               city: "London",             country: "GB", lat: 51.507041, lng: -0.003390, type: "ethernet" },
+  { name: "Telehouse - Paris 2 (Voltaire)",         address: "137 Boulevard Voltaire",        city: "Paris",              country: "FR", lat: 48.856654, lng: 2.385320,  type: "ethernet" },
+  { name: "Unilogic Networks Datacenter Sittard",   address: "Bergerweg 120",                 city: "Sittard",            country: "NL", lat: 50.995925, lng: 5.845593,  type: "ethernet" },
+  { name: "KoloDC NL2",                             address: "Ketelskamp 10",                 city: "Meppel",             country: "NL", lat: 52.717249, lng: 6.198720,  type: "ethernet" },
+  { name: "KoloDC NL3",                             address: "Laan van de Ram 39",            city: "Apeldoorn",          country: "NL", lat: 52.247030, lng: 6.001603,  type: "ethernet" },
+  { name: "maincubes AMS01",                        address: "Capronilaan 2",                 city: "Schiphol Rijk",      country: "NL", lat: 52.282192, lng: 4.772861,  type: "ethernet" },
 ];
 
+// ── State ────────────────────────────────────────────────────────────────
+let currentView = 'map';
+let sortCol = 'name';
+let sortAsc = true;
+
+// ── Map setup ────────────────────────────────────────────────────────────
 const map = L.map('map', {
-  center: [52.2, 5.0],
-  zoom: 8,
+  center: [52.2, 5.8],
+  zoom: 5,
   zoomControl: true,
   attributionControl: true,
 });
@@ -264,48 +427,95 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 }).addTo(map);
 
 function makeIcon(type) {
-  const color  = type === 'direct' ? '#4CAF50' : '#0070BA';
-  const border = type === 'direct' ? '#388E3C' : '#005a96';
-
+  const color  = type === 'dwdm' ? '#0070BA' : '#4CAF50';
+  const border = type === 'dwdm' ? '#005a96' : '#388E3C';
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
       <circle cx="9" cy="9" r="7" fill="${color}" stroke="${border}" stroke-width="1.5"/>
       <circle cx="9" cy="9" r="3" fill="white" opacity="0.5"/>
     </svg>`;
-
-  return L.divIcon({
-    html: svg,
-    className: '',
-    iconSize:   [18, 18],
-    iconAnchor: [9, 9],
-    popupAnchor:[0, -12],
-  });
+  return L.divIcon({ html: svg, className: '', iconSize: [18,18], iconAnchor: [9,9], popupAnchor: [0,-12] });
 }
 
 function makePopup(dc) {
-  const typeLabel = dc.type === 'direct' ? 'Eigen aanwezigheid' : 'Via leverancier';
-  const tags = dc.services.map(s => `<span class="popup-service-tag">${s}</span>`).join('');
-
+  const typeLabel = dc.type === 'dwdm' ? 'DWDM, Ethernet' : 'Ethernet';
   return `
     <div class="popup-inner">
       <div class="popup-header">
         <div class="popup-type-dot ${dc.type}"></div>
         <div class="popup-name">${dc.name}</div>
       </div>
-      <div class="popup-address">${dc.address}</div>
+      <div class="popup-address">${dc.address}, ${dc.city}</div>
       <span class="popup-badge ${dc.type}">${typeLabel}</span>
-      <div class="popup-services">
-        <div class="popup-services-label">Services</div>
-        ${tags}
-      </div>
     </div>`;
 }
 
+// Add all markers to the map
 datacenters.forEach(dc => {
   const marker = L.marker([dc.lat, dc.lng], { icon: makeIcon(dc.type) });
   marker.bindPopup(makePopup(dc), { maxWidth: 280 });
   marker.addTo(map);
 });
+
+// ── View toggle ──────────────────────────────────────────────────────────
+function switchView(view) {
+  currentView = view;
+  document.getElementById('view-map').classList.toggle('hidden', view !== 'map');
+  document.getElementById('view-list').classList.toggle('hidden', view !== 'list');
+  document.getElementById('btn-map').classList.toggle('active', view === 'map');
+  document.getElementById('btn-list').classList.toggle('active', view === 'list');
+  if (view === 'map') {
+    setTimeout(() => map.invalidateSize(), 50);
+  } else {
+    renderTable();
+  }
+}
+
+// ── Table rendering ──────────────────────────────────────────────────────
+function sortTable(col) {
+  if (sortCol === col) {
+    sortAsc = !sortAsc;
+  } else {
+    sortCol = col;
+    sortAsc = true;
+  }
+  ['name','city','country','address','type'].forEach(c => {
+    const el = document.getElementById('sort-' + c);
+    el.classList.toggle('active', c === sortCol);
+    if (c === sortCol) el.textContent = sortAsc ? '▲' : '▼';
+    else el.textContent = '▲';
+  });
+  renderTable();
+}
+
+function renderTable() {
+  const sorted = [...datacenters].sort((a, b) => {
+    const va = a[sortCol].toLowerCase();
+    const vb = b[sortCol].toLowerCase();
+    return sortAsc ? va.localeCompare(vb, 'nl') : vb.localeCompare(va, 'nl');
+  });
+
+  document.getElementById('list-count').textContent = `${sorted.length} locatie${sorted.length !== 1 ? 's' : ''}`;
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = sorted.map(dc => {
+    const typeLabel = dc.type === 'dwdm' ? 'DWDM, Ethernet' : 'Ethernet';
+    const flag = COUNTRY_FLAGS[dc.country] || '';
+    return `
+      <tr>
+        <td class="table-name">${dc.name}</td>
+        <td>${dc.city}</td>
+        <td><span class="table-flag">${flag}</span>${dc.country}</td>
+        <td class="table-address">${dc.address}</td>
+        <td>
+          <span class="table-badge ${dc.type}">
+            <span class="table-badge-dot"></span>
+            ${typeLabel}
+          </span>
+        </td>
+      </tr>`;
+  }).join('');
+}
 </script>
 </body>
 </html>
