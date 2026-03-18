@@ -279,6 +279,50 @@
 
     .popup-badge.dwdm    { background: var(--np-blue-light);  color: var(--np-blue-dark); }
     .popup-badge.ethernet { background: var(--np-green-light); color: var(--np-green-dark); }
+
+    /* ── Map legend ── */
+    .map-legend {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 14px 18px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+      font-family: 'Barlow', sans-serif;
+      min-width: 190px;
+    }
+
+    .map-legend-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6b7a99;
+      margin-bottom: 10px;
+    }
+
+    .map-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1a2233;
+      margin-bottom: 8px;
+    }
+
+    .map-legend-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .map-legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 2px solid rgba(0,0,0,0.15);
+    }
+
+    .map-legend-dot.dwdm    { background: var(--np-blue); border-color: var(--np-blue-dark); }
+    .map-legend-dot.ethernet { background: var(--np-green); border-color: var(--np-green-dark); }
   </style>
 </head>
 <body>
@@ -425,6 +469,24 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   subdomains: 'abcd',
   maxZoom: 19,
 }).addTo(map);
+
+// ── Legend control ───────────────────────────────────────────────────────
+const legend = L.control({ position: 'bottomleft' });
+legend.onAdd = function () {
+  const div = L.DomUtil.create('div', 'map-legend');
+  div.innerHTML = `
+    <div class="map-legend-title">Product Type</div>
+    <div class="map-legend-item">
+      <span class="map-legend-dot dwdm"></span>
+      DWDM, Ethernet
+    </div>
+    <div class="map-legend-item">
+      <span class="map-legend-dot ethernet"></span>
+      Ethernet
+    </div>`;
+  return div;
+};
+legend.addTo(map);
 
 function makeIcon(type) {
   const color  = type === 'dwdm' ? '#0070BA' : '#4CAF50';
